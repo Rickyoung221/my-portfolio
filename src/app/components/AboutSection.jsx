@@ -17,7 +17,7 @@ const AboutSection = () => {
   return (
     <section
       id="about"
-      className="flex flex-col my-12 py-24 gap-8 relative items-center text-white"
+      className="flex flex-col my-12 py-24 gap-8 relative items-center "
     >
       <div className="flex flex-col items-center justify-center">
         {/* 图片区域 */}

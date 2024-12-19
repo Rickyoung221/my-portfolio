@@ -8,6 +8,7 @@ import Logo from "./Logo";
 import GithubIcon from "../../../public/github-white-icon.png";
 import LinkedinIcon from "../../../public/linkedin-app-white-icon.svg";
 import InstagramIcon from "../../../public/instagram-white-icon.svg";
+import ThemeToggle from "@components/ThemeToggle";
 
 import Image from "next/image";
 
@@ -58,6 +59,7 @@ const Navbar = () => {
             />
           </Link>
         </div>
+
         <div className="mobile-menu block md:hidden">
           {!navbarOpen ? (
             <button

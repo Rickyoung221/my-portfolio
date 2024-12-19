@@ -38,3 +38,18 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+/* 默认背景和文本样式 */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark {
+  background-color: #1a202c; /* 深色背景 */
+  color: #f7fafc; /* 浅色文本 */
+}
+
+body.light {
+  background-color: #ffffff; /* 浅色背景 */
+  color: #000000; /* 深色文本 */
+}
