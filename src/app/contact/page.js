@@ -1,7 +1,7 @@
 "use client";
-import EmailSection from "@components/EmailSection";
-import PageTitle from "@components/PageTitle";
-import PageContainer from "@components/PageContainer";
+import EmailSection from "@/components/contact/EmailSection";
+import PageTitle from "@/components/ui/PageTitle";
+import PageContainer from "@/components/layout/PageContainer";
 
 export default function ContactPage() {
   return (

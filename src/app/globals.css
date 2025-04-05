@@ -2,6 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Three.js canvas styles */
+canvas {
+  touch-action: none;
+  outline: none;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* 确保 Three.js 画布填充其容器 */
+.three-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 防止画布上的文本选择 */
+.three-container * {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* 圆形容器样式 */
+.hero-model-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

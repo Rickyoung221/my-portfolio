@@ -1,7 +1,7 @@
 "use client";
-import ProjectsSection from "@/app/projects/ProjectsSection";
-import PageTitle from "@components/PageTitle";
-import PageContainer from "@components/PageContainer";
+import ProjectsSection from "@/components/projects/ProjectsSection";
+import PageTitle from "@/components/ui/PageTitle";
+import PageContainer from "@/components/layout/PageContainer";
 
 export default function ProjectPage() {
   return (

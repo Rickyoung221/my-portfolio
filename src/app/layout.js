@@ -1,15 +1,15 @@
 import "./globals.css";
 import "react-resizable/css/styles.css";
 import { Inter } from "next/font/google";
-import Navbar from "@components/Navbar";
-import Footer from "@components/Footer";
-import MusicPlayer from "@components/MusicPlayer";
-import { ThemeProvider } from './context/ThemeContext';
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import MusicPlayer from "@/components/music-player/MusicPlayer";
+import { ThemeProvider } from '@/context/ThemeContext';
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Ri Yang's Portfolio",
+  title: "Rick's Portfolio",
   description: "Welcome to my portfolio",
 };
 

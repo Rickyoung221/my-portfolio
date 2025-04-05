@@ -1,21 +1,21 @@
 "use client";
 import dynamic from 'next/dynamic';
-import HeroSection from "./components/HeroSection";
-import SectionTitle from "./components/SectionTitle";
-import { useTheme } from './context/ThemeContext';
+import HeroSection from "@/components/home/hero/HeroSection";
+import SectionTitle from "@/components/ui/SectionTitle";
+import { useTheme } from '@/context/ThemeContext';
 
 // 动态导入非关键组件
-const ProjectsSection = dynamic(() => import("./projects/ProjectsSection"), {
+const ProjectsSection = dynamic(() => import("@/components/projects/ProjectsSection"), {
   loading: () => <div>Loading...</div>,
   ssr: false
 });
 
-const AboutSection = dynamic(() => import("./components/AboutSection"), {
-  loading: () => <div>Loading...</div>
+const AboutSection = dynamic(() => import("@/components/about/AboutSection"), {
+  loading: () => <div>Loading...</div>,
 });
 
-const EmailSection = dynamic(() => import("./components/EmailSection"), {
-  loading: () => <div>Loading...</div>
+const EmailSection = dynamic(() => import("@/components/contact/EmailSection"), {
+  loading: () => <div>Loading...</div>,
 });
 
 export default function Home() {

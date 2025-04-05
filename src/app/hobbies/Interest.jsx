@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import DraggableWindow from "@/app/components/DraggableWindow";
-import { useTheme } from '../context/ThemeContext';
+import DraggableWindow from "@/components/layout/DraggableWindow";
+import { useTheme } from '@/context/ThemeContext';
 import WindowContent from './components/WindowContent';
 import { getInitialPosition, getWindowTitle } from './utils/windowUtils';
 

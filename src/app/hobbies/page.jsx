@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef } from 'react';
 import Interests from './Interest';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '@/context/ThemeContext';
 
 const HobbiesPage = () => {
   const containerRef = useRef(null);
