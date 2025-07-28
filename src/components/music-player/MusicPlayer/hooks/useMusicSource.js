@@ -45,21 +45,33 @@ export const useMusicSource = () => {
   const loadFromSource = async () => {
     setIsLoading(true);
     try {
+      console.log("开始从源加载播放列表...");
       const source = musicSourceManager.getCurrentSource();
+      console.log("当前音乐源:", source);
+
       const newPlaylist = await source.getPlaylist();
+      console.log("获取到的播放列表:", newPlaylist);
 
-      // Update cache
-      localStorage.setItem(
-        CACHE_KEY,
-        JSON.stringify({
-          data: newPlaylist,
-          timestamp: Date.now(),
-        })
-      );
+      if (newPlaylist && newPlaylist.length > 0) {
+        // Update cache
+        localStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({
+            data: newPlaylist,
+            timestamp: Date.now(),
+          })
+        );
 
-      setPlaylist(newPlaylist);
-      setError(null);
+        setPlaylist(newPlaylist);
+        setError(null);
+        console.log("播放列表加载成功，共", newPlaylist.length, "首歌曲");
+      } else {
+        console.error("播放列表为空");
+        setError("播放列表为空");
+        setPlaylist([]);
+      }
     } catch (err) {
+      console.error("加载播放列表失败:", err);
       setError(err.message);
       setPlaylist([]);
     } finally {
@@ -68,6 +80,9 @@ export const useMusicSource = () => {
   };
 
   const refreshPlaylistInBackground = async () => {
+    // 暂时禁用后台刷新，避免循环更新
+    return;
+
     try {
       const source = musicSourceManager.getCurrentSource();
       const newPlaylist = await source.getPlaylist();

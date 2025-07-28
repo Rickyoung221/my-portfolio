@@ -71,15 +71,13 @@ const themeScript = `
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <style dangerouslySetInnerHTML={{ __html: noFlashStyle }} />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body
         suppressHydrationWarning
-        data-new-gr-c-s-check-loaded="14.1157.0"
-        data-gr-ext-installed=""
         className="min-h-screen transition-all duration-300 font-sans"
       >
         <ThemeProvider>

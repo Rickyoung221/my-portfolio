@@ -15,11 +15,14 @@ export class NeteaseMusicSource extends MusicSourceInterface {
 
   async getPlaylist() {
     try {
+      console.log(`正在获取歌单 ${this.playlistId}...`);
       const response = await fetch(
         `${this.apiBaseUrl}/playlist?id=${this.playlistId}`
       );
       if (!response.ok) throw new Error("获取网易云歌单失败");
       const data = await response.json();
+
+      console.log("API返回数据:", data);
 
       // 处理网易云音乐API返回的不同可能的结构
       let tracks = [];
@@ -27,21 +30,35 @@ export class NeteaseMusicSource extends MusicSourceInterface {
       // 方式1: 标准网易云API返回格式
       if (data.result && Array.isArray(data.result.tracks)) {
         tracks = data.result.tracks;
+        console.log("使用标准格式，找到", tracks.length, "首歌曲");
       }
       // 方式2: 直接歌曲数组
       else if (Array.isArray(data.tracks)) {
         tracks = data.tracks;
+        console.log("使用直接数组格式，找到", tracks.length, "首歌曲");
       }
       // 方式3: 歌曲数组可能在songs字段中
       else if (Array.isArray(data.songs)) {
         tracks = data.songs;
+        console.log("使用songs格式，找到", tracks.length, "首歌曲");
       }
       // 方式4: 单个歌曲对象
       else if (data.songs && Array.isArray(data.songs)) {
         tracks = data.songs;
+        console.log("使用嵌套songs格式，找到", tracks.length, "首歌曲");
+      }
+      // 方式5: 检查是否有任何歌曲数据
+      else if (
+        data.result &&
+        data.result.tracks &&
+        Array.isArray(data.result.tracks)
+      ) {
+        tracks = data.result.tracks;
+        console.log("使用result.tracks格式，找到", tracks.length, "首歌曲");
       }
 
       if (!tracks.length) {
+        console.error("未找到歌曲数据，数据结构:", data);
         throw new Error("获取的歌单格式不正确或歌单为空");
       }
 

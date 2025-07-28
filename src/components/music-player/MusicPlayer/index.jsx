@@ -36,6 +36,10 @@ const MusicPlayer = () => {
   const [showPlaylist, setShowPlaylist] = useState(false);
   const [showLyrics, setShowLyrics] = useState(false); // 控制歌词显示
   const [preloadedTracks, setPreloadedTracks] = useState(new Set());
+  const [isLoadingTrack, setIsLoadingTrack] = useState(false); // 防止重复加载
+  const [lastTrackId, setLastTrackId] = useState(null); // 记录上次加载的歌曲ID
+  const [playFailed, setPlayFailed] = useState(false); // 记录播放是否失败
+  const [shouldLoadTrack, setShouldLoadTrack] = useState(true); // 控制是否应该加载新歌曲
 
   const audioRef = useRef(null);
   const { isDarkMode } = useTheme();
@@ -64,52 +68,57 @@ const MusicPlayer = () => {
     return playlist[currentTrackIndex];
   };
 
-  // Register Netease music source
+  // Register Netease music source - 只在组件挂载时初始化一次
   useEffect(() => {
     const initializePlayer = async () => {
       try {
+        console.log("初始化播放器...");
         const neteaseSource = new NeteaseMusicSource(playlistId);
         registerSource("netease", neteaseSource);
         await switchSource("netease");
         setIsInitialized(true);
+        console.log("播放器初始化完成");
       } catch (err) {
+        console.error("播放器初始化失败:", err);
         setError("Failed to initialize player");
       }
     };
 
     initializePlayer();
-  }, []);
+  }, []); // 只在组件挂载时执行一次
 
   // 添加新的逻辑在加载完成后自动播放
   useEffect(() => {
     // 只有当初始化完成且有音乐地址时才尝试播放
+    // 注意：由于浏览器自动播放策略，这里不自动播放
     if (isInitialized && currentTrackUrl && audioRef.current && !isPlaying) {
-      // 延迟一点再开始播放，确保音频已加载
-      const timer = setTimeout(() => {
-        togglePlay();
-      }, 800);
-
-      return () => clearTimeout(timer);
+      console.log("音频已加载，等待用户交互后播放:", currentTrackUrl);
+      // 不自动播放，等待用户点击播放按钮
     }
-  }, [isInitialized, currentTrackUrl]);
+  }, [isInitialized, currentTrackUrl]); // 移除 isPlaying 依赖，避免循环
 
   // Update music source when playlist ID changes
   useEffect(() => {
-    const neteaseSource = new NeteaseMusicSource(playlistId);
-    registerSource("netease", neteaseSource);
-    switchSource("netease");
-  }, [playlistId]);
+    if (playlistId && playlistId !== "" && isInitialized) {
+      console.log("歌单ID变化，重新加载:", playlistId);
+      const neteaseSource = new NeteaseMusicSource(playlistId);
+      registerSource("netease", neteaseSource);
+      switchSource("netease");
+    }
+  }, [playlistId, isInitialized]);
 
   // Ensure currentTrackIndex is always valid
   useEffect(() => {
     if (playlist && playlist.length > 0) {
       if (currentTrackIndex >= playlist.length) {
+        console.log("当前歌曲索引超出范围，重置为0");
         setCurrentTrackIndex(0);
       }
-    } else if (currentTrackIndex !== 0) {
+    } else if (playlist && playlist.length === 0 && currentTrackIndex !== 0) {
+      console.log("播放列表为空，重置歌曲索引为0");
       setCurrentTrackIndex(0);
     }
-  }, [playlist, currentTrackIndex]);
+  }, [playlist]); // 只依赖 playlist，移除 currentTrackIndex 避免循环
 
   // Extract metadata from MP3 file (including cover)
   const extractMetadata = async (trackIndex) => {
@@ -170,68 +179,119 @@ const MusicPlayer = () => {
     try {
       setCurrentTrackUrl("");
 
-      const proxyUrl = `/api/netease/song/url?id=${playlist[trackIndex].id}&level=${audioQuality}`;
+      const trackId = playlist[trackIndex].id;
+      console.log("获取歌曲URL:", trackId);
+
+      // 使用我们的代理API，确保返回正确的音频数据
+      const proxyUrl = `/api/netease/song/url?id=${trackId}`;
       setCurrentTrackUrl(proxyUrl);
+      console.log("设置音频URL (代理):", proxyUrl);
     } catch (error) {
-      setCurrentTrackUrl("");
+      console.error("设置音频URL失败:", error);
+      // 如果API失败，尝试使用直连URL
+      const trackId = playlist[trackIndex].id;
+      const directUrl = `https://music.163.com/song/media/outer/url?id=${trackId}.mp3`;
+      setCurrentTrackUrl(directUrl);
+      console.log("使用直连URL作为备选:", directUrl);
     }
   };
 
   // Extract new metadata and URL when changing tracks
   useEffect(() => {
+    // 防止在播放列表为空时触发
+    if (!playlist || playlist.length === 0) {
+      return;
+    }
+
+    // 检查是否应该加载新歌曲
+    if (!shouldLoadTrack) {
+      console.log("跳过加载新歌曲");
+      return;
+    }
+
     let retryCount = 0;
     const maxRetries = 3;
     const initialDelay = 1000; // 1 second delay for first load
 
-    const loadTrackData = async () => {
-      try {
-        if (
-          !isLoading &&
-          playlist &&
-          playlist.length > 0 &&
-          currentTrackIndex >= 0 &&
-          currentTrackIndex < playlist.length
-        ) {
-          // Add delay for initial load
-          if (!currentTrackUrl && retryCount === 0) {
-            await new Promise((resolve) => setTimeout(resolve, initialDelay));
+    // 添加防抖，避免频繁触发
+    const timeoutId = setTimeout(() => {
+      const loadTrackData = async () => {
+        // 防止重复加载
+        if (isLoadingTrack) {
+          return;
+        }
+
+        // 检查当前歌曲是否已经加载过
+        const currentTrack = playlist?.[currentTrackIndex];
+        if (currentTrack && lastTrackId === currentTrack.id) {
+          console.log("歌曲已加载过，跳过:", currentTrack.id);
+          return;
+        }
+
+        try {
+          setIsLoadingTrack(true);
+
+          if (
+            !isLoading &&
+            playlist &&
+            playlist.length > 0 &&
+            currentTrackIndex >= 0 &&
+            currentTrackIndex < playlist.length
+          ) {
+            console.log(
+              "开始加载歌曲:",
+              currentTrack?.name || currentTrackIndex
+            );
+
+            // Add delay for initial load
+            if (!currentTrackUrl && retryCount === 0) {
+              await new Promise((resolve) => setTimeout(resolve, initialDelay));
+            }
+
+            const metadata = await extractMetadata(currentTrackIndex);
+
+            // If metadata failed and we haven't exceeded max retries
+            if (!metadata && retryCount < maxRetries) {
+              retryCount++;
+              console.log(
+                `Retrying metadata load (${retryCount}/${maxRetries})...`
+              );
+              setTimeout(loadTrackData, 1000 * retryCount); // Exponential backoff
+              return;
+            }
+
+            await loadCurrentTrackUrl(currentTrackIndex);
+
+            // 记录已加载的歌曲ID
+            if (currentTrack) {
+              setLastTrackId(currentTrack.id);
+            }
+
+            // 重置重试计数
+            retryCount = 0;
           }
-
-          const metadata = await extractMetadata(currentTrackIndex);
-
-          // If metadata failed and we haven't exceeded max retries
-          if (!metadata && retryCount < maxRetries) {
+        } catch (error) {
+          if (retryCount < maxRetries) {
             retryCount++;
             console.log(
-              `Retrying metadata load (${retryCount}/${maxRetries})...`
+              `Retrying after error (${retryCount}/${maxRetries}):`,
+              error
             );
-            setTimeout(loadTrackData, 1000 * retryCount); // Exponential backoff
-            return;
+            setTimeout(loadTrackData, 1000 * retryCount);
+          } else {
+            console.warn("Failed to load track data after retries:", error);
+            retryCount = 0; // 重置重试计数
           }
-
-          await loadCurrentTrackUrl(currentTrackIndex);
+        } finally {
+          setIsLoadingTrack(false);
         }
-      } catch (error) {
-        if (retryCount < maxRetries) {
-          retryCount++;
-          console.log(
-            `Retrying after error (${retryCount}/${maxRetries}):`,
-            error
-          );
-          setTimeout(loadTrackData, 1000 * retryCount);
-        } else {
-          console.warn("Failed to load track data after retries:", error);
-        }
-      }
-    };
+      };
 
-    loadTrackData();
+      loadTrackData();
+    }, 500); // 增加防抖延迟到500ms
 
-    // Cleanup function
-    return () => {
-      retryCount = maxRetries; // Prevent any pending retries
-    };
-  }, [currentTrackIndex, playlist, isLoading]);
+    return () => clearTimeout(timeoutId);
+  }, [currentTrackIndex, playlist, shouldLoadTrack]); // 添加 shouldLoadTrack 依赖
 
   // Handle music source change
   const handleSourceChange = (source) => {
@@ -250,26 +310,37 @@ const MusicPlayer = () => {
   // Toggle play/pause
   const togglePlay = () => {
     if (!audioRef.current || !currentTrackUrl) {
+      console.log("无法播放：缺少音频元素或URL");
       return;
     }
 
     if (audioRef.current.paused) {
-      setTimeout(() => {
-        audioRef.current.play().catch(() => {
-          audioRef.current.load();
-          setTimeout(() => {
-            audioRef.current.play().catch(() => {
-              if (playlist && playlist.length > 1) {
-                playNext();
-              }
-            });
-          }, 1000);
+      console.log("开始播放");
+      // 立即尝试播放，不需要延迟
+      audioRef.current
+        .play()
+        .then(() => {
+          console.log("播放成功");
+          setIsPlaying(true);
+          setPlayFailed(false); // 重置失败标志
+        })
+        .catch((error) => {
+          console.log("播放失败，错误:", error);
+          if (error.name === "NotAllowedError") {
+            console.log("需要用户交互才能播放，请点击播放按钮");
+          } else if (error.name === "NotSupportedError") {
+            console.log("音频源不支持，阻止自动切换");
+            setShouldLoadTrack(false); // 阻止自动加载新歌曲
+          }
+          // 设置播放失败标志
+          setPlayFailed(true);
+          setIsPlaying(false);
         });
-      }, 500);
     } else {
+      console.log("暂停播放");
       audioRef.current.pause();
+      setIsPlaying(false);
     }
-    setIsPlaying(!isPlaying);
   };
 
   // Switch to next track
@@ -277,6 +348,8 @@ const MusicPlayer = () => {
     if (!playlist || playlist.length === 0) {
       return;
     }
+    console.log("切换到下一首歌曲");
+    setShouldLoadTrack(true); // 允许加载新歌曲
     setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % playlist.length);
   };
 
@@ -285,6 +358,8 @@ const MusicPlayer = () => {
     if (!playlist || playlist.length === 0) {
       return;
     }
+    console.log("切换到上一首歌曲");
+    setShouldLoadTrack(true); // 允许加载新歌曲
     setCurrentTrackIndex((prevIndex) =>
       prevIndex === 0 ? playlist.length - 1 : prevIndex - 1
     );
@@ -355,11 +430,8 @@ const MusicPlayer = () => {
 
     const handleLoadedMetadata = () => {
       setDuration(audio.duration);
-      if (isPlaying) {
-        audio.play().catch(() => {
-          setIsPlaying(false);
-        });
-      }
+      console.log("音频元数据加载完成，时长:", audio.duration);
+      // 不自动播放，等待用户交互
     };
 
     const handleTimeUpdate = () => {
@@ -367,32 +439,26 @@ const MusicPlayer = () => {
     };
 
     const handleEnded = () => {
-      playNext();
+      console.log("歌曲播放结束");
+      // 只有在正常播放结束时才切换到下一首
+      if (audio.currentTime > 0 && audio.duration > 0 && !playFailed) {
+        console.log("正常播放结束，切换到下一首");
+        playNext();
+      } else {
+        console.log("播放失败或异常结束，不自动切换");
+        setIsPlaying(false);
+        setPlayFailed(false); // 重置失败标志
+      }
     };
 
     const handleError = () => {
+      console.log("音频播放错误");
       const mediaError = audio.error;
       if (mediaError) {
-        if (playlist && playlist.length > 0 && playlist[currentTrackIndex]) {
-          setCurrentTrackUrl("");
-
-          setTimeout(() => {
-            const proxyUrl = `/api/netease/song/url?id=${playlist[currentTrackIndex].id}`;
-            setCurrentTrackUrl(proxyUrl);
-
-            setTimeout(() => {
-              if (audioRef.current) {
-                audioRef.current.load();
-              }
-            }, 500);
-          }, 500);
-
-          return;
-        }
-      }
-
-      if (playlist && playlist.length > 1) {
-        setTimeout(playNext, 2000);
+        console.log("媒体错误:", mediaError);
+        // 设置播放失败标志
+        setPlayFailed(true);
+        setIsPlaying(false);
       }
     };
 
@@ -407,13 +473,16 @@ const MusicPlayer = () => {
       audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("error", handleError);
     };
-  }, [currentTrackIndex, isPlaying, playlist.length]);
+  }, []); // 只在组件挂载时绑定事件监听器
 
   // Handle track selection from playlist
   const handleTrackSelect = (index) => {
+    console.log("用户选择歌曲:", index);
+    setShouldLoadTrack(true); // 允许加载新歌曲
     setCurrentTrackIndex(index);
-    setIsPlaying(true);
+    setPlayFailed(false); // 重置播放失败标志
     setShowPlaylist(false);
+    // 不自动播放，等待用户点击播放按钮
   };
 
   // 在当前歌曲加载完成后预加载下一首
@@ -680,10 +749,16 @@ const MusicPlayer = () => {
                 src={currentTrackUrl}
                 preload="auto"
                 crossOrigin="anonymous"
-                onError={() => {
-                  if (playlist && playlist.length > 1) {
-                    setTimeout(playNext, 2000);
-                  }
+                onError={(e) => {
+                  console.log("音频元素错误:", e);
+                  console.log("当前音频URL:", currentTrackUrl);
+                  // 移除自动切换到下一首的逻辑
+                }}
+                onLoadStart={() => {
+                  console.log("开始加载音频:", currentTrackUrl);
+                }}
+                onCanPlay={() => {
+                  console.log("音频可以播放:", currentTrackUrl);
                 }}
               />
 
