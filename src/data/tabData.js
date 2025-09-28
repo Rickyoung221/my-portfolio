@@ -4,12 +4,19 @@ import TimelineDynamics from "@/components/experience/TimelineDynamics";
 import { useTheme } from "@/context/ThemeContext";
 import SkillCircle from "@/components/skills/SkillCircle";
 import { educationData } from "@/data/educationData";
-import { FaGraduationCap, FaCalendarAlt, FaBook } from "react-icons/fa";
+import {
+  FaGraduationCap,
+  FaCalendarAlt,
+  FaBook,
+  FaChevronDown,
+  FaChevronRight,
+} from "react-icons/fa";
 import { BsAward, BsSearch } from "react-icons/bs";
 import { GiAchievement } from "react-icons/gi";
+import { useState } from "react";
 
 const cardStyle = (isDarkMode) => `
-  p-6 rounded-lg
+  p-4 rounded-lg
   ${
     isDarkMode
       ? "bg-[#1a1f24] hover:bg-[#1f252c]"
@@ -24,7 +31,15 @@ const cardStyle = (isDarkMode) => `
 
 const TabDataContent = () => {
   const { isDarkMode } = useTheme();
-  
+  const [expandedNonCS, setExpandedNonCS] = useState({});
+
+  const toggleNonCS = (index) => {
+    setExpandedNonCS((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
   const TAB_DATA = [
     {
       title: "Experience",
@@ -50,21 +65,21 @@ const TabDataContent = () => {
       content: (
         <div className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto px-4 sm:px-6">
           <div className="relative group w-full flex justify-center mb-8">
-          <Image
+            <Image
               src={
                 isDarkMode
                   ? "/images/UCLA_Samueli_CS_block_cmyk_rev.svg"
                   : "/images/UCLA_Samueli_CS_block_cmyk.svg"
               }
               alt="UCLA School of Engineering"
-            width={300}
-            height={300}
+              width={300}
+              height={300}
               className="rounded-lg w-full max-w-[250px] sm:max-w-[300px] transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl"
               priority
             />
           </div>
 
-          <div className="w-full space-y-4 sm:space-y-6" role="list">
+          <div className="w-full space-y-3 sm:space-y-4" role="list">
             {educationData.map((edu, index) => (
               <div
                 key={index}
@@ -184,8 +199,74 @@ const TabDataContent = () => {
                   </div>
                 </div>
 
+                {edu.nonCSClasses && (
+                  <div className="mt-4">
+                    <button
+                      onClick={() => toggleNonCS(index)}
+                      className="flex items-center gap-2 mb-2 w-full text-left hover:opacity-80 transition-opacity"
+                      aria-expanded={expandedNonCS[index] || false}
+                      aria-controls={`non-cs-${index}`}
+                    >
+                      <FaBook
+                        className={`text-sm ${
+                          isDarkMode ? "text-gray-300" : "text-[#586e75]"
+                        }`}
+                      />
+                      <h4
+                        className={`text-sm font-semibold
+                        ${isDarkMode ? "text-gray-300" : "text-[#586e75]"}`}
+                      >
+                        Non CS Courses
+                      </h4>
+                      {expandedNonCS[index] ? (
+                        <FaChevronDown
+                          className={`text-xs ${
+                            isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
+                          }`}
+                        />
+                      ) : (
+                        <FaChevronRight
+                          className={`text-xs ${
+                            isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
+                          }`}
+                        />
+                      )}
+                    </button>
+                    {expandedNonCS[index] && (
+                      <div
+                        id={`non-cs-${index}`}
+                        className="grid grid-cols-1 gap-[0.5rem] pl-6 mb-4"
+                        role="list"
+                        aria-labelledby={`non-cs-${index}`}
+                      >
+                        {edu.nonCSClasses.map((course, idx) => (
+                          <div
+                            key={idx}
+                            className={`text-sm py-[0.4rem] px-2 rounded relative
+                              ${
+                                isDarkMode
+                                  ? "bg-[#232930] text-gray-300"
+                                  : "bg-[#e6e6e6] text-[#586e75]"
+                              }
+                              before:content-[''] before:absolute before:left-[-0.75rem] before:top-1/2 before:-translate-y-1/2
+                              before:w-1.5 before:h-1.5 before:rounded-full
+                              ${
+                                isDarkMode
+                                  ? "before:bg-gray-500"
+                                  : "before:bg-[#93a1a1]"
+                              }`}
+                            role="listitem"
+                          >
+                            {course}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {edu.teachingExperience && (
-                  <div className="mt-6">
+                  <div className="mt-4">
                     <div className="flex items-center gap-2 mb-2">
                       <GiAchievement
                         className={`text-sm ${
@@ -249,7 +330,7 @@ const TabDataContent = () => {
                 )}
 
                 {edu.researchExperience && (
-                  <div className="mt-6">
+                  <div className="mt-4">
                     <div className="flex items-center gap-2 mb-2">
                       <BsSearch
                         className={`text-sm ${
@@ -343,15 +424,15 @@ const TabDataContent = () => {
                                 </span>
                               </div>
                             </div>
-              </div>
-              </div>
+                          </div>
+                        </div>
                       ))}
-              </div>
-              </div>
+                    </div>
+                  </div>
                 )}
               </div>
             ))}
-              </div>
+          </div>
         </div>
       ),
     },
