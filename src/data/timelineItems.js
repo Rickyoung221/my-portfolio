@@ -1,6 +1,6 @@
 const TIMELINE_ITEMS = [
   {
-    date: "June 2025 - Sept 2025",
+    date: "June 2025 - Dec 2025",
     title: "Software Engineer Intern",
     location: "TikTok | San Jose, CA",
     description: "Ads Infrastructure & Auto-Scaling Platform Development",
@@ -23,7 +23,7 @@ const TIMELINE_ITEMS = [
     location: "Mercedes-Benz | Beijing, China",
     description:
       "Autonomous Driving 3D Visualization & Coordinate System Development",
-    logo: "https://p.ipic.vip/ru4usl.svg",
+    logo: "/images/experience/benz_logo.png",
     details:
       "Developed interactive 3D HD map visualization tool using PyQt5 GUI for autonomous driving sensor data and high-precision map visualization. Implemented JSON format parsing, loading, rendering and coordinate system conversion between vehicle and global coordinates.\n\n• Built coordinate transformation module for sensor annotation alignment, identified and fixed coordinate calculation bugs to significantly improve annotation accuracy\n• Refactored 2000+ lines of legacy PyQt5 code into 1500 lines modular design following SOLID principles, improving maintainability and helping algorithm colleagues integrate more efficiently\n• Created detailed documentation and user manuals for team onboarding, collaborated with perception algorithm and test engineers for continuous product iteration",
   },
@@ -33,17 +33,17 @@ const TIMELINE_ITEMS = [
     location: "UCLA | Los Angeles, CA",
     description:
       "GPA: 4.0/4.0 | Focused on distributed systems, artificial intelligence, and big data analytics.",
-    logo: "https://p.ipic.vip/q1ysgx.png",
+    logo: "/images/experience/ucla_logo.jpg",
     details:
       "Key Courses: Big Data Analytics (A+) | Expected Graduation: March 2026",
   },
   {
-    date: "March 2023 - May 2023",
+    date: "Mar 2023 - May 2023",
     title: "Frontend Development Engineer Intern",
     location: "Student Medicover | Burlingame, CA",
     description:
       "Developed a WeChat Mini Program for a healthcare insurance platform, improving customer interaction efficiency by 30%.",
-    logo: "https://p.ipic.vip/ci1f6o.jpeg",
+    logo: "/images/experience/student_medicover_logo.jpeg",
     details: "",
   },
   {
@@ -52,7 +52,7 @@ const TIMELINE_ITEMS = [
     location: "BNU Intelligent Research Institute | Beijing, China",
     description:
       "Led the team to design and develop a multilingual website with support for multiple languages. Implemented scalable RESTful APIs and deployed cloud-based services using Node.js and AWS.",
-    logo: "https://p.ipic.vip/bbzb85.png",
+    logo: "/images/experience/bnu_logo.webp",
     details:
       "As team leader, oversaw the development process and ensured project delivery on time. Enhanced system security with Google ReCAPTCHA, blocking 96% of bot attacks. Improved server response time by 40% through API optimization and implemented automated deployment pipelines for microservices.",
   },
@@ -62,7 +62,7 @@ const TIMELINE_ITEMS = [
     location: "Web3MQ | Hangzhou, China",
     description:
       "Built a Chrome extension for Web3MQ, a blockchain-based platform, enabling seamless integration of decentralized messaging.",
-    logo: "https://p.ipic.vip/jtwyzq.jpg",
+    logo: "/images/experience/web3mq_logo",
     details:
       "Integrated Web3 wallets into the extension, improving blockchain accessibility for end-users by 25%.",
   },
@@ -82,17 +82,17 @@ const TIMELINE_ITEMS = [
     location: "Alibaba Group | Beijing, China",
     description:
       "Developed iOS applications with Swift and ARKit, implementing real-time 3D facial mapping and enhanced Bluetooth functionality. Contributed to backend services with scalable RESTful APIs.",
-    logo: "https://p.ipic.vip/4pvdoy.svg",
+    logo: "/images/experience/alibaba.svg",
     details:
       "Improved backend efficiency by 20%, ensured seamless frontend-backend integration, and optimized AR-based features for real-time performance.",
   },
   {
-    date: "Sept 2019 - March 2024",
+    date: "Sept 2019 - Mar 2024",
     title: "Bachelor of Computer Science",
     location: "UCLA | Los Angeles, CA",
     description:
-      "GPA: 3.9/4.0 | Dean's Honors List | Recipient of the Southern California Edison STEM Scholarship.",
-    logo: "https://p.ipic.vip/q1ysgx.png",
+      "GPA: 3.91/4.00 | Dean's Honors List | Southern California Edison STEM Scholarship Recipient (2020-2021, 2021-2022)",
+    logo: "/images/experience/ucla_logo.jpg",
     details:
       "Focused on computer security and software engineering. Key courses include Software Engineering (A+), Computer Networks (A), and Algorithm (A+). Conducted research on computer security in Professor Yuan Tian's Lab, exploring vulnerability detection techniques.",
   },
