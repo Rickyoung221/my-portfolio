@@ -23,8 +23,15 @@ import {
   FaChartLine,
   FaSearch,
 } from "react-icons/fa";
-import { BsAward, BsSearch } from "react-icons/bs";
+import {
+  BsAward,
+  BsSearch,
+  BsFileText,
+  BsQuote,
+  BsInfoCircle,
+} from "react-icons/bs";
 import { GiAchievement } from "react-icons/gi";
+import { MdRecommend, MdVerified } from "react-icons/md";
 
 const cardStyle = (isDarkMode) => `
   p-4 rounded-lg
@@ -419,9 +426,13 @@ const TabDataContent = () => {
                                 <div className="text-xs font-semibold flex items-center gap-1">
                                   {exp.course}
                                   {exp.details && (
-                                    <span className="text-xs opacity-60">
-                                      📋
-                                    </span>
+                                    <BsInfoCircle className="text-xs text-blue-500 opacity-60" />
+                                  )}
+                                  {exp.recommendation && (
+                                    <MdVerified
+                                      className="text-xs text-green-500"
+                                      title="有教授推荐信"
+                                    />
                                   )}
                                 </div>
                                 {exp.details && (
@@ -488,6 +499,34 @@ const TabDataContent = () => {
                                     </li>
                                   ))}
                                 </ul>
+                                {exp.recommendation && (
+                                  <div className="mt-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                                    <div className="text-xs font-semibold mb-2 text-gray-600 dark:text-gray-300 flex items-center gap-1">
+                                      <MdRecommend className="text-sm text-blue-500" />
+                                      Professor Recommendation
+                                    </div>
+                                    <div className="text-xs text-gray-600 dark:text-gray-300 mb-2">
+                                      {exp.recommendation.text}
+                                    </div>
+                                    {exp.recommendation.summary && (
+                                      <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 italic">
+                                        {exp.recommendation.summary}
+                                      </div>
+                                    )}
+                                    <div className="mt-2">
+                                      <Image
+                                        src={exp.recommendation.image}
+                                        alt="Professor Recommendation"
+                                        width={400}
+                                        height={300}
+                                        className="rounded-lg border border-gray-200 dark:border-gray-600 max-w-full h-auto"
+                                        onError={(e) => {
+                                          e.target.style.display = "none";
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                )}
                               </div>
                             )}
                           </div>
