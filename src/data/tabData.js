@@ -399,7 +399,7 @@ const TabDataContent = () => {
                         return (
                           <div key={idx}>
                             <div
-                              className={`text-sm py-1 px-2 rounded relative mb-0.5 cursor-pointer hover:opacity-80 transition-opacity
+                              className={`text-sm py-1 px-2 rounded relative mb-0.5 cursor-pointer hover:opacity-80 hover:bg-opacity-90 transition-all group
                                 ${
                                   isDarkMode
                                     ? "bg-[#232930] text-gray-300"
@@ -416,15 +416,23 @@ const TabDataContent = () => {
                               onClick={() => toggleTeaching(index, idx)}
                             >
                               <div className="flex items-center justify-between">
-                                <div className="text-xs font-semibold">
+                                <div className="text-xs font-semibold flex items-center gap-1">
                                   {exp.course}
+                                  {exp.details && (
+                                    <span className="text-xs opacity-60">
+                                      📋
+                                    </span>
+                                  )}
                                 </div>
                                 {exp.details && (
-                                  <div className="flex items-center gap-1">
+                                  <div
+                                    className="flex items-center gap-1"
+                                    title="点击查看详细信息"
+                                  >
                                     {isExpanded ? (
-                                      <FaChevronDown className="text-xs text-gray-400" />
+                                      <FaChevronDown className="text-xs text-blue-500 group-hover:scale-110 transition-transform" />
                                     ) : (
-                                      <FaChevronRight className="text-xs text-gray-400" />
+                                      <FaChevronRight className="text-xs text-blue-500 group-hover:scale-110 transition-transform" />
                                     )}
                                   </div>
                                 )}
