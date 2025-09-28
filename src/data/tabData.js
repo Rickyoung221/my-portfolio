@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import Image from "next/image";
 import TimelineDynamics from "@/components/experience/TimelineDynamics";
 import { useTheme } from "@/context/ThemeContext";
@@ -24,7 +25,6 @@ import {
 } from "react-icons/fa";
 import { BsAward, BsSearch } from "react-icons/bs";
 import { GiAchievement } from "react-icons/gi";
-import { useState } from "react";
 
 const cardStyle = (isDarkMode) => `
   p-4 rounded-lg
@@ -43,11 +43,20 @@ const cardStyle = (isDarkMode) => `
 const TabDataContent = () => {
   const { isDarkMode } = useTheme();
   const [expandedNonCS, setExpandedNonCS] = useState({});
+  const [expandedTeaching, setExpandedTeaching] = useState({});
 
   const toggleNonCS = (index) => {
     setExpandedNonCS((prev) => ({
       ...prev,
       [index]: !prev[index],
+    }));
+  };
+
+  const toggleTeaching = (eduIndex, expIndex) => {
+    const key = `${eduIndex}-${expIndex}`;
+    setExpandedTeaching((prev) => ({
+      ...prev,
+      [key]: !prev[key],
     }));
   };
 
@@ -114,36 +123,32 @@ const TabDataContent = () => {
                   </h3>
                 </div>
 
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex items-center gap-2">
-                    <FaCalendarAlt
-                      className={`text-sm ${
-                        isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
-                      }`}
-                    />
-                    <span
-                      className={`text-sm ${
-                        isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
-                      }`}
-                      aria-label="Study period"
-                    >
-                      {edu.period}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <GiAchievement
-                      className={`text-base ${
-                        isDarkMode ? "text-[#58a6ff]" : "text-[#2075c7]"
-                      }`}
-                    />
-                    <span
-                      className={`text-sm font-medium
-                      ${isDarkMode ? "text-[#58a6ff]" : "text-[#2075c7]"}`}
-                      aria-label="Grade Point Average"
-                    >
-                      GPA: {edu.gpa}
-                    </span>
-                  </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <FaCalendarAlt
+                    className={`text-sm ${
+                      isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
+                    }`}
+                  />
+                  <span
+                    className={`text-sm ${
+                      isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
+                    }`}
+                    aria-label="Study period"
+                  >
+                    {edu.period}
+                  </span>
+                  <GiAchievement
+                    className={`text-base ${
+                      isDarkMode ? "text-[#58a6ff]" : "text-[#2075c7]"
+                    }`}
+                  />
+                  <span
+                    className={`text-sm font-medium
+                    ${isDarkMode ? "text-[#58a6ff]" : "text-[#2075c7]"}`}
+                    aria-label="Grade Point Average"
+                  >
+                    GPA: {edu.gpa}
+                  </span>
                 </div>
 
                 <div className="mt-4">
@@ -385,49 +390,101 @@ const TabDataContent = () => {
                       </h4>
                     </div>
                     <div
-                      className="grid grid-cols-1 gap-[0.5rem] pl-6"
+                      className="grid grid-cols-1 gap-0.5 pl-6"
                       role="list"
                       aria-labelledby={`teaching-${index}`}
                     >
-                      {edu.teachingExperience.map((exp, idx) => (
-                        <div
-                          key={idx}
-                          className={`text-sm py-[0.4rem] px-2 rounded relative
-                            ${
-                              isDarkMode
-                                ? "bg-[#232930] text-gray-300"
-                                : "bg-[#e6e6e6] text-[#586e75]"
-                            }
-                            before:content-[''] before:absolute before:left-[-0.75rem] before:top-1/2 before:-translate-y-1/2
-                            before:w-1.5 before:h-1.5 before:rounded-full
-                            ${
-                              isDarkMode
-                                ? "before:bg-gray-500"
-                                : "before:bg-[#93a1a1]"
-                            }`}
-                          role="listitem"
-                        >
-                          <div className="flex justify-between items-center">
-                            <span>{exp.course}</span>
-                            <span
-                              className={`text-xs font-medium ml-2 px-2 py-0.5 rounded
-                              ${
-                                isDarkMode
-                                  ? "bg-[#58a6ff]/20 text-[#58a6ff]"
-                                  : "bg-[#2075c7]/20 text-[#2075c7]"
-                              }`}
+                      {edu.teachingExperience.map((exp, idx) => {
+                        const isExpanded = expandedTeaching[`${index}-${idx}`];
+                        return (
+                          <div key={idx}>
+                            <div
+                              className={`text-sm py-1 px-2 rounded relative mb-0.5 cursor-pointer hover:opacity-80 transition-opacity
+                                ${
+                                  isDarkMode
+                                    ? "bg-[#232930] text-gray-300"
+                                    : "bg-[#e6e6e6] text-[#586e75]"
+                                }
+                                before:content-[''] before:absolute before:left-[-0.75rem] before:top-1/2 before:-translate-y-1/2
+                                before:w-1.5 before:h-1.5 before:rounded-full
+                                ${
+                                  isDarkMode
+                                    ? "before:bg-gray-500"
+                                    : "before:bg-[#93a1a1]"
+                                }`}
+                              role="listitem"
+                              onClick={() => toggleTeaching(index, idx)}
                             >
-                              {exp.role}
-                            </span>
+                              <div className="flex items-center justify-between">
+                                <div className="text-xs font-semibold">
+                                  {exp.course}
+                                </div>
+                                {exp.details && (
+                                  <div className="flex items-center gap-1">
+                                    {isExpanded ? (
+                                      <FaChevronDown className="text-xs text-gray-400" />
+                                    ) : (
+                                      <FaChevronRight className="text-xs text-gray-400" />
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-2 mb-0">
+                                <span
+                                  className={`text-xs ${
+                                    isDarkMode
+                                      ? "text-gray-400"
+                                      : "text-[#93a1a1]"
+                                  }`}
+                                >
+                                  {exp.period}
+                                </span>
+                                <span className="text-gray-400">•</span>
+                                <span
+                                  className={`text-xs font-medium px-2 py-0.5 rounded
+                                  ${
+                                    isDarkMode
+                                      ? "bg-[#58a6ff]/20 text-[#58a6ff]"
+                                      : "bg-[#2075c7]/20 text-[#2075c7]"
+                                  }`}
+                                >
+                                  {exp.role}
+                                </span>
+                              </div>
+                              <div
+                                className={`text-xs ${
+                                  isDarkMode
+                                    ? "text-gray-400"
+                                    : "text-[#93a1a1]"
+                                }`}
+                              >
+                                Supervised by {exp.professor}
+                              </div>
+                            </div>
+                            {exp.details && isExpanded && (
+                              <div className="ml-6 mt-1 mb-2">
+                                <ul className="text-xs space-y-1">
+                                  {exp.details.map((detail, detailIdx) => (
+                                    <li
+                                      key={detailIdx}
+                                      className={`flex items-start gap-2 ${
+                                        isDarkMode
+                                          ? "text-gray-400"
+                                          : "text-[#93a1a1]"
+                                      }`}
+                                    >
+                                      <span className="text-gray-500 mt-0.5 flex-shrink-0">
+                                        •
+                                      </span>
+                                      <span className="flex-1">{detail}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
                           </div>
-                          <div
-                            className={`text-xs mt-1
-                            ${isDarkMode ? "text-gray-400" : "text-[#93a1a1]"}`}
-                          >
-                            {exp.period}
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
