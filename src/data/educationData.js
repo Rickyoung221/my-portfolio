@@ -22,16 +22,16 @@ export const educationData = [
     gpa: "4.00/4.00",
     courses: {
       "Big Data & Analytics": [
-        "CS 214 - Big Data Systems",
-        "CS 245 - Big Data Analytics",
+        "CS 245 - Big Data Analytics ",
+        "CS 214 - Big Data Systems ",
         "EC ENGR 219 - Large-Scale Data Mining",
       ],
       "Machine Learning & AI": [
         "CS 269 - Deformable Models in Computer Vision",
         "EC ENGR 232E - Large Scale Social Networks",
       ],
-      "Systems & Architecture": ["CS 251A - Advanced Computer Architecture"],
-      "Software Engineering": ["CS 230 - Software Engineering (Graduate)"],
+      "Systems & Architecture": ["CS 251A - Advanced Computer Architecture "],
+      "Software Engineering": ["CS 230 - Software Engineering (Graduate) "],
       "IoT & Emerging Technologies": ["CS 215 - Internet of Things"],
       "Research & Seminars": [
         "CS 201 - Computer Science Seminar",
@@ -52,35 +52,37 @@ export const educationData = [
         {
           name: "CS 130 - Software Engineering",
           achievement:
-            "The only student who achieved an A+ grade among 110+ students",
+            "⭐️ The only student who achieved an A+ grade among 110+ students",
         },
       ],
       "Systems & Architecture": [
+        "CS 111 - Operating Systems Principles ",
+        "CS 134 - Distributed Systems ",
         "CS 33 – Introduction to Computer Organization",
-        "CS 111 - Operating Systems Principles",
-        "CS 134 - Distributed Systems",
         "CS M151B/EE M116C - Computer Systems Architecture",
         "CS M152A - Introductory Digital Design Laboratory",
       ],
       "Data & Web Technologies": [
-        "CS 143 - Database Systems",
-        "CS 144 - Web Applications",
+        "CS 144 - Web Applications ",
+        "CS 143 - Database Systems ",
       ],
       "Algorithms & Theory": [
-        "CS 180 - Introduction to Algorithms and Complexity",
+        "CS 180 - Introduction to Algorithms and Complexity ",
         "CS 181 - Introduction to Formal Languages and Automata",
       ],
       "AI & Machine Learning": [
-        "CS 161 - Fundamentals of Artificial Intelligence",
-        "CS 146 - Introduction to Machine Learning",
-        "cs 148 - Introduction to Data Science - Data Mining",
+        "CS 161 - Fundamentals of Artificial Intelligence ",
+        "CS 146 - Introduction to Machine Learning ",
+        "CS 148 - Introduction to Data Science - Data Mining",
       ],
       "Networking & Security": [
-        "CS 118 - Computer Network Fundamentals",
-        "CS 188 - Software Security",
+        "CS 118 - Computer Network Fundamentals ",
+        "CS 188 - Software Security ",
       ],
-      "Graphics & Visualization": ["CS 174A - Computer Graphics"],
-      "Research & Special Projects": ["CS 199 - Directed Research"],
+      "Graphics & Research": [
+        "CS 174A - Computer Graphics",
+        "CS 199 - Directed Research",
+      ],
     },
     nonCSClasses: {
       "Mathematics & Sciences": [

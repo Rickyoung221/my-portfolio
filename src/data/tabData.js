@@ -199,10 +199,16 @@ const TabDataContent = () => {
                             {category === "Research & Special Projects" && (
                               <FaSearch className="text-xs" />
                             )}
+                            {category === "Graphics & Research" && (
+                              <FaPalette className="text-xs" />
+                            )}
                             {category === "Big Data & Analytics" && (
                               <FaDatabase className="text-xs" />
                             )}
                             {category === "Computer Vision & AI" && (
+                              <FaBrain className="text-xs" />
+                            )}
+                            {category === "Machine Learning & AI" && (
                               <FaBrain className="text-xs" />
                             )}
                             {category === "IoT & Emerging Technologies" && (
@@ -242,7 +248,7 @@ const TabDataContent = () => {
                                     <div className="flex justify-between items-center">
                                       <span>{course.name}</span>
                                       <span
-                                        className={`text-xs font-medium ml-2 px-2 py-0.5 rounded flex items-center gap-1
+                                        className={`text-xs font-medium ml-2 px-2 py-0.5 rounded
                                       ${
                                         isDarkMode
                                           ? "bg-[#58a6ff]/20 text-[#58a6ff]"
@@ -250,7 +256,6 @@ const TabDataContent = () => {
                                       }`}
                                         aria-label="Course achievement"
                                       >
-                                        <GiAchievement className="text-xs" />
                                         {course.achievement}
                                       </span>
                                     </div>
