@@ -10,6 +10,17 @@ import {
   FaBook,
   FaChevronDown,
   FaChevronRight,
+  FaFlask,
+  FaBriefcase,
+  FaLaptopCode,
+  FaPalette,
+  FaCode,
+  FaServer,
+  FaDatabase,
+  FaBrain,
+  FaShieldAlt,
+  FaChartLine,
+  FaSearch,
 } from "react-icons/fa";
 import { BsAward, BsSearch } from "react-icons/bs";
 import { GiAchievement } from "react-icons/gi";
@@ -79,7 +90,7 @@ const TabDataContent = () => {
             />
           </div>
 
-          <div className="w-full space-y-3 sm:space-y-4" role="list">
+          <div className="w-full space-y-2" role="list">
             {educationData.map((edu, index) => (
               <div
                 key={index}
@@ -151,51 +162,106 @@ const TabDataContent = () => {
                     </h4>
                   </div>
                   <div
-                    className="grid grid-cols-1 gap-[0.5rem] pl-6"
+                    className="pl-6 space-y-1.5"
                     role="list"
                     aria-labelledby={`courses-${index}`}
                   >
-                    {edu.courses.map((course, idx) => (
-                      <div
-                        key={idx}
-                        className={`text-sm py-[0.4rem] px-2 rounded relative
-                          ${
-                            isDarkMode
-                              ? "bg-[#232930] text-gray-300"
-                              : "bg-[#e6e6e6] text-[#586e75]"
-                          }
-                          before:content-[''] before:absolute before:left-[-0.75rem] before:top-1/2 before:-translate-y-1/2
-                          before:w-1.5 before:h-1.5 before:rounded-full
-                          ${
-                            isDarkMode
-                              ? "before:bg-gray-500"
-                              : "before:bg-[#93a1a1]"
-                          }`}
-                        role="listitem"
-                      >
-                        {typeof course === "string" ? (
-                          course
-                        ) : (
-                          <div>
-                            <div className="flex justify-between items-center">
-                              <span>{course.name}</span>
-                              <span
-                                className={`text-xs font-medium ml-2 px-2 py-0.5 rounded flex items-center gap-1
+                    {Object.entries(edu.courses).map(
+                      ([category, courses], categoryIdx) => (
+                        <div key={categoryIdx} className="space-y-0.5">
+                          <h4
+                            className={`text-xs font-semibold uppercase tracking-wide mb-0.5 flex items-center gap-1 ${
+                              isDarkMode ? "text-gray-400" : "text-gray-600"
+                            }`}
+                          >
+                            {category ===
+                              "Core Programming & Software Engineering" && (
+                              <FaCode className="text-xs" />
+                            )}
+                            {category === "Systems & Architecture" && (
+                              <FaServer className="text-xs" />
+                            )}
+                            {category === "Data & Web Technologies" && (
+                              <FaDatabase className="text-xs" />
+                            )}
+                            {category === "Algorithms & Theory" && (
+                              <FaChartLine className="text-xs" />
+                            )}
+                            {category === "AI & Machine Learning" && (
+                              <FaBrain className="text-xs" />
+                            )}
+                            {category === "Networking & Security" && (
+                              <FaShieldAlt className="text-xs" />
+                            )}
+                            {category === "Graphics & Visualization" && (
+                              <FaPalette className="text-xs" />
+                            )}
+                            {category === "Research & Special Projects" && (
+                              <FaSearch className="text-xs" />
+                            )}
+                            {category === "Big Data & Analytics" && (
+                              <FaDatabase className="text-xs" />
+                            )}
+                            {category === "Computer Vision & AI" && (
+                              <FaBrain className="text-xs" />
+                            )}
+                            {category === "IoT & Emerging Technologies" && (
+                              <FaLaptopCode className="text-xs" />
+                            )}
+                            {category === "Research & Seminars" && (
+                              <FaSearch className="text-xs" />
+                            )}
+                            {category === "Software Engineering" && (
+                              <FaCode className="text-xs" />
+                            )}
+                            {category}
+                          </h4>
+                          <div className="grid grid-cols-1 gap-0">
+                            {courses.map((course, courseIdx) => (
+                              <div
+                                key={courseIdx}
+                                className={`text-xs py-0 px-2 rounded relative
                                 ${
                                   isDarkMode
-                                    ? "bg-[#58a6ff]/20 text-[#58a6ff]"
-                                    : "bg-[#2075c7]/20 text-[#2075c7]"
+                                    ? "bg-[#232930] text-gray-300"
+                                    : "bg-[#e6e6e6] text-[#586e75]"
+                                }
+                                before:content-[''] before:absolute before:left-[-0.5rem] before:top-1/2 before:-translate-y-1/2
+                                before:w-1 before:h-1 before:rounded-full
+                                ${
+                                  isDarkMode
+                                    ? "before:bg-gray-500"
+                                    : "before:bg-[#93a1a1]"
                                 }`}
-                                aria-label="Course achievement"
+                                role="listitem"
                               >
-                                <GiAchievement className="text-xs" />
-                                {course.achievement}
-                              </span>
-                            </div>
+                                {typeof course === "string" ? (
+                                  course
+                                ) : (
+                                  <div>
+                                    <div className="flex justify-between items-center">
+                                      <span>{course.name}</span>
+                                      <span
+                                        className={`text-xs font-medium ml-2 px-2 py-0.5 rounded flex items-center gap-1
+                                      ${
+                                        isDarkMode
+                                          ? "bg-[#58a6ff]/20 text-[#58a6ff]"
+                                          : "bg-[#2075c7]/20 text-[#2075c7]"
+                                      }`}
+                                        aria-label="Course achievement"
+                                      >
+                                        <GiAchievement className="text-xs" />
+                                        {course.achievement}
+                                      </span>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
                           </div>
-                        )}
-                      </div>
-                    ))}
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
 
@@ -235,31 +301,63 @@ const TabDataContent = () => {
                     {expandedNonCS[index] && (
                       <div
                         id={`non-cs-${index}`}
-                        className="grid grid-cols-1 gap-[0.5rem] pl-6 mb-4"
+                        className="pl-6 mb-4 space-y-1.5"
                         role="list"
                         aria-labelledby={`non-cs-${index}`}
                       >
-                        {edu.nonCSClasses.map((course, idx) => (
-                          <div
-                            key={idx}
-                            className={`text-sm py-[0.4rem] px-2 rounded relative
-                              ${
-                                isDarkMode
-                                  ? "bg-[#232930] text-gray-300"
-                                  : "bg-[#e6e6e6] text-[#586e75]"
-                              }
-                              before:content-[''] before:absolute before:left-[-0.75rem] before:top-1/2 before:-translate-y-1/2
-                              before:w-1.5 before:h-1.5 before:rounded-full
-                              ${
-                                isDarkMode
-                                  ? "before:bg-gray-500"
-                                  : "before:bg-[#93a1a1]"
-                              }`}
-                            role="listitem"
-                          >
-                            {course}
-                          </div>
-                        ))}
+                        {Object.entries(edu.nonCSClasses).map(
+                          ([category, courses], categoryIdx) => (
+                            <div key={categoryIdx} className="space-y-0.5">
+                              <h4
+                                className={`text-xs font-semibold uppercase tracking-wide mb-0.5 flex items-center gap-1 ${
+                                  isDarkMode ? "text-gray-400" : "text-gray-600"
+                                }`}
+                              >
+                                {category === "Mathematics & Sciences" && (
+                                  <FaFlask className="text-xs" />
+                                )}
+                                {category === "Business & Management" && (
+                                  <FaBriefcase className="text-xs" />
+                                )}
+                                {category ===
+                                  "Humanities & Social Sciences" && (
+                                  <FaBook className="text-xs" />
+                                )}
+                                {category ===
+                                  "Digital Humanities & Technology" && (
+                                  <FaLaptopCode className="text-xs" />
+                                )}
+                                {category === "Arts & Culture" && (
+                                  <FaPalette className="text-xs" />
+                                )}
+                                {category}
+                              </h4>
+                              <div className="grid grid-cols-1 gap-0">
+                                {courses.map((course, courseIdx) => (
+                                  <div
+                                    key={courseIdx}
+                                    className={`text-xs py-0 px-2 rounded relative
+                                    ${
+                                      isDarkMode
+                                        ? "bg-[#232930] text-gray-300"
+                                        : "bg-[#e6e6e6] text-[#586e75]"
+                                    }
+                                    before:content-[''] before:absolute before:left-[-0.5rem] before:top-1/2 before:-translate-y-1/2
+                                    before:w-1 before:h-1 before:rounded-full
+                                    ${
+                                      isDarkMode
+                                        ? "before:bg-gray-500"
+                                        : "before:bg-[#93a1a1]"
+                                    }`}
+                                    role="listitem"
+                                  >
+                                    {course}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )
+                        )}
                       </div>
                     )}
                   </div>
