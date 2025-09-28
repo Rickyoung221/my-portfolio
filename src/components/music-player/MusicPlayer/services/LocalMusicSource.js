@@ -1,23 +1,23 @@
 "use client";
 
-import { parseBlob } from 'music-metadata';
-import { MusicSourceInterface } from './MusicSourceInterface';
+import { parseBlob } from "music-metadata";
+import { MusicSourceInterface } from "./MusicSourceInterface";
 
 export class LocalMusicSource extends MusicSourceInterface {
   async getPlaylist() {
     try {
-      const response = await fetch('/api/music');
-      if (!response.ok) throw new Error('Failed to load music list');
+      const response = await fetch("/api/music");
+      if (!response.ok) throw new Error("Failed to load music list");
       const musicFiles = await response.json();
-      
-      return musicFiles.map(file => ({
+
+      return musicFiles.map((file) => ({
         id: file.title, // 使用文件名作为ID
         title: file.title,
         src: file.src,
-        cover: null // 初始为空，后续通过getMetadata获取
+        cover: null, // 初始为空，后续通过getMetadata获取
       }));
     } catch (error) {
-      console.error('Error loading playlist:', error);
+      console.error("Error loading playlist:", error);
       return [];
     }
   }
@@ -27,7 +27,7 @@ export class LocalMusicSource extends MusicSourceInterface {
       const response = await fetch(`/music/${trackId}.mp3`);
       const buffer = await response.arrayBuffer();
       const metadata = await parseBlob(new Blob([buffer]));
-      
+
       let coverUrl = null;
       if (metadata.common.picture && metadata.common.picture.length > 0) {
         const picture = metadata.common.picture[0];
@@ -40,13 +40,13 @@ export class LocalMusicSource extends MusicSourceInterface {
         artist: metadata.common.artist,
         album: metadata.common.album,
         cover: coverUrl,
-        duration: metadata.format.duration
+        duration: metadata.format.duration,
       };
     } catch (error) {
-      console.error('Error extracting metadata:', error);
+      console.error("Error extracting metadata:", error);
       return {
         title: trackId,
-        cover: null
+        cover: null,
       };
     }
   }
@@ -54,4 +54,4 @@ export class LocalMusicSource extends MusicSourceInterface {
   async getAudioUrl(trackId) {
     return `/music/${trackId}.mp3`;
   }
-} 
+}
