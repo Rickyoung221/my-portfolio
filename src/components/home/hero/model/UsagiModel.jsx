@@ -1,34 +1,43 @@
-import { useGLTF } from '@react-three/drei';
-import { useRef, useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import * as THREE from 'three';
+import { useGLTF } from "@react-three/drei";
+import { useRef, useEffect } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import * as THREE from "three";
+import { useAudioHover } from "@/hooks/useAudioHover";
 
 export const UsagiModel = () => {
-  const { scene } = useGLTF('/usagi.glb');
+  const { scene } = useGLTF("/usagi.glb");
   const modelRef = useRef();
   const { viewport } = useThree();
   const mouse = useRef([0, 0]);
   const baseRotationY = Math.PI * 0.25; // 基础Y轴旋转
+
+  // 音频播放hook
+  const { playAudio, stopAudio, cleanup } = useAudioHover(
+    "/usagi_cursor/3uniques.mp3"
+  );
 
   useEffect(() => {
     const updateMouse = (event) => {
       // 将鼠标位置归一化到 -1 到 1 的范围
       mouse.current = [
         (event.clientX / window.innerWidth) * 2 - 1,
-        -(event.clientY / window.innerHeight) * 2 + 1
+        -(event.clientY / window.innerHeight) * 2 + 1,
       ];
     };
 
-    window.addEventListener('mousemove', updateMouse);
-    return () => window.removeEventListener('mousemove', updateMouse);
-  }, []);
+    window.addEventListener("mousemove", updateMouse);
+    return () => {
+      window.removeEventListener("mousemove", updateMouse);
+      cleanup(); // 清理音频资源
+    };
+  }, [cleanup]);
 
   useFrame((state, delta) => {
     if (!modelRef.current) return;
 
     // 计算目标旋转
     const targetX = -mouse.current[1] * 0.2; // 上下视线移动
-    
+
     // 计算左右旋转
     let rotationOffset;
     let zOffset;
@@ -43,7 +52,7 @@ export const UsagiModel = () => {
       // 右侧：根据鼠标位置调整Z轴位置
       zOffset = mouse.current[0] * 0.3;
     }
-    
+
     const targetY = baseRotationY + rotationOffset;
 
     // 平滑插值当前旋转到目标旋转
@@ -67,11 +76,13 @@ export const UsagiModel = () => {
   });
 
   return (
-    <primitive 
+    <primitive
       ref={modelRef}
-      object={scene} 
-      scale={2} 
+      object={scene}
+      scale={2}
       position={[0.5, -0.5, 0]}
+      onPointerEnter={playAudio}
+      onPointerLeave={stopAudio}
     />
   );
-}; 
+};
