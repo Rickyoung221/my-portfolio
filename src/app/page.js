@@ -25,6 +25,7 @@ const EmailSection = dynamic(
 );
 
 export default function Home() {
+  // 热更新测试注释 - 如果你看到这个，说明热更新正常工作！
   const { isDarkMode } = useTheme();
 
   return (

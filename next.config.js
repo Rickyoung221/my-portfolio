@@ -69,16 +69,26 @@ const nextConfig = {
       {
         protocol: "http",
         hostname: "p2.music.126.net",
-      }
+      },
     ],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    formats: ['image/webp'],
+    formats: ["image/webp"],
     minimumCacheTTL: 60,
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ['localhost:3000', '127.0.0.1:3000', 'localhost', '127.0.0.1', 'fonts.googleapis.com', 'www.google.com', 'www.gstatic.com', 'www.recaptcha.net', 'recaptcha.net'],
+      allowedOrigins: [
+        "localhost:3000",
+        "127.0.0.1:3000",
+        "localhost",
+        "127.0.0.1",
+        "fonts.googleapis.com",
+        "www.google.com",
+        "www.gstatic.com",
+        "www.recaptcha.net",
+        "recaptcha.net",
+      ],
     },
     serverComponentsExternalPackages: [],
     webpackBuildWorker: false,
@@ -86,26 +96,26 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/recaptcha/api.js',
-        destination: 'https://www.google.com/recaptcha/api.js',
+        source: "/recaptcha/api.js",
+        destination: "https://www.google.com/recaptcha/api.js",
       },
       {
-        source: '/recaptcha/api2.js',
-        destination: 'https://www.google.com/recaptcha/api2.js',
+        source: "/recaptcha/api2.js",
+        destination: "https://www.google.com/recaptcha/api2.js",
       },
     ];
   },
   webpack: (config, { isServer, dev }) => {
     config.optimization = {
       ...config.optimization,
-      moduleIds: 'deterministic',
+      moduleIds: "deterministic",
       minimize: !dev,
       minimizer: [...(config.optimization.minimizer || [])],
     };
-    
+
     if (!isServer) {
       config.optimization.splitChunks = {
-        chunks: 'all',
+        chunks: "all",
         minSize: 20000,
         maxSize: 244000,
         minChunks: 1,
@@ -125,13 +135,13 @@ const nextConfig = {
         },
       };
     }
-    
+
     if (dev) {
       config.watchOptions = {
         ...config.watchOptions,
-        poll: 1000,
+        poll: false, // 禁用轮询，使用原生文件系统事件
         aggregateTimeout: 300,
-        ignored: ['**/node_modules', '**/.git', '**/.next'],
+        ignored: ["**/node_modules", "**/.git", "**/.next"],
       };
 
       config.experiments = {
@@ -140,7 +150,7 @@ const nextConfig = {
         layers: true,
       };
     }
-    
+
     return config;
   },
   onDemandEntries: {
