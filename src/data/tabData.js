@@ -286,31 +286,68 @@ const TabDataContent = () => {
                   <div className="mt-4">
                     <button
                       onClick={() => toggleNonCS(index)}
-                      className="flex items-center gap-2 mb-2 w-full text-left hover:opacity-80 transition-opacity"
+                      className={`flex items-center gap-3 mb-2 w-full text-left p-3 rounded-lg border transition-all duration-200 hover:scale-[1.02] cursor-pointer group
+                        ${
+                          isDarkMode
+                            ? "bg-[#161b22] border-[#30363d] hover:bg-[#1f252c] hover:border-[#58a6ff]"
+                            : "bg-[#f6f8fa] border-[#d0d7de] hover:bg-[#e6edf3] hover:border-[#0969da]"
+                        }
+                        ${
+                          expandedNonCS[index]
+                            ? isDarkMode
+                              ? "bg-[#1f252c] border-[#58a6ff]"
+                              : "bg-[#e6edf3] border-[#0969da]"
+                            : ""
+                        }
+                      `}
                       aria-expanded={expandedNonCS[index] || false}
                       aria-controls={`non-cs-${index}`}
                     >
                       <FaBook
-                        className={`text-sm ${
-                          isDarkMode ? "text-gray-300" : "text-[#586e75]"
+                        className={`text-lg transition-colors duration-200 ${
+                          isDarkMode
+                            ? "text-[#58a6ff] group-hover:text-[#79c0ff]"
+                            : "text-[#0969da] group-hover:text-[#2075c7]"
                         }`}
                       />
-                      <h4
-                        className={`text-sm font-semibold
-                        ${isDarkMode ? "text-gray-300" : "text-[#586e75]"}`}
-                      >
-                        Non CS Courses
-                      </h4>
+                      <div className="flex-1">
+                        <h4
+                          className={`text-sm font-semibold transition-colors duration-200
+                          ${
+                            isDarkMode
+                              ? "text-[#e6edf3] group-hover:text-white"
+                              : "text-[#24292f] group-hover:text-[#0969da]"
+                          }`}
+                        >
+                          Non CS Courses
+                        </h4>
+                        <p
+                          className={`text-xs mt-1 transition-colors duration-200
+                          ${
+                            isDarkMode
+                              ? "text-[#8b949e] group-hover:text-[#a5a5a5]"
+                              : "text-[#57606a] group-hover:text-[#656d76]"
+                          }`}
+                        >
+                          {expandedNonCS[index]
+                            ? "Click to collapse"
+                            : "Click to expand"}
+                        </p>
+                      </div>
                       {expandedNonCS[index] ? (
                         <FaChevronDown
-                          className={`text-xs ${
-                            isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
+                          className={`text-sm transition-all duration-200 ${
+                            isDarkMode
+                              ? "text-[#58a6ff] group-hover:text-[#79c0ff]"
+                              : "text-[#0969da] group-hover:text-[#2075c7]"
                           }`}
                         />
                       ) : (
                         <FaChevronRight
-                          className={`text-xs ${
-                            isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
+                          className={`text-sm transition-all duration-200 ${
+                            isDarkMode
+                              ? "text-[#58a6ff] group-hover:text-[#79c0ff]"
+                              : "text-[#0969da] group-hover:text-[#2075c7]"
                           }`}
                         />
                       )}
@@ -500,26 +537,63 @@ const TabDataContent = () => {
                                   ))}
                                 </ul>
                                 {exp.recommendation && (
-                                  <div className="mt-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                                    <div className="text-xs font-semibold mb-2 text-gray-600 dark:text-gray-300 flex items-center gap-1">
-                                      <MdRecommend className="text-sm text-blue-500" />
+                                  <div
+                                    className={`mt-3 p-4 rounded-lg border shadow-md transition-all duration-300 hover:shadow-lg
+                                     ${
+                                       isDarkMode
+                                         ? "bg-[#0d1117] border-[#30363d] hover:bg-[#161b22]"
+                                         : "bg-white border-[#d0d7de] hover:bg-[#f6f8fa]"
+                                     }`}
+                                  >
+                                    <div
+                                      className={`text-sm font-semibold mb-3 flex items-center gap-2
+                                      ${
+                                        isDarkMode
+                                          ? "text-[#58a6ff]"
+                                          : "text-[#0969da]"
+                                      }
+                                    `}
+                                    >
+                                      <MdRecommend className="text-lg" />
                                       Professor Recommendation
                                     </div>
-                                    <div className="text-xs text-gray-600 dark:text-gray-300 mb-2">
+                                    <div
+                                      className={`text-sm leading-relaxed mb-3
+                                      ${
+                                        isDarkMode
+                                          ? "text-[#e6edf3]"
+                                          : "text-[#24292f]"
+                                      }
+                                    `}
+                                    >
                                       {exp.recommendation.text}
                                     </div>
                                     {exp.recommendation.summary && (
-                                      <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 italic">
+                                      <div
+                                        className={`text-sm italic mb-3 p-2 rounded border-l-4
+                                         ${
+                                           isDarkMode
+                                             ? "text-[#8b949e] bg-[#21262d] border-[#58a6ff]"
+                                             : "text-[#57606a] bg-[#f1f3f4] border-[#0969da]"
+                                         }
+                                       `}
+                                      >
                                         {exp.recommendation.summary}
                                       </div>
                                     )}
-                                    <div className="mt-2">
+                                    <div className="mt-3">
                                       <Image
                                         src={exp.recommendation.image}
                                         alt="Professor Recommendation"
                                         width={400}
                                         height={300}
-                                        className="rounded-lg border border-gray-200 dark:border-gray-600 max-w-full h-auto"
+                                        className={`rounded-lg border-2 max-w-full h-auto shadow-sm
+                                          ${
+                                            isDarkMode
+                                              ? "border-[#30363d] hover:border-[#58a6ff]"
+                                              : "border-[#d0d7de] hover:border-[#0969da]"
+                                          }
+                                        `}
                                         onError={(e) => {
                                           e.target.style.display = "none";
                                         }}
