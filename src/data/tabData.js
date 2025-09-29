@@ -1,15 +1,40 @@
 "use client";
+import { useState } from "react";
 import Image from "next/image";
 import TimelineDynamics from "@/components/experience/TimelineDynamics";
 import { useTheme } from "@/context/ThemeContext";
 import SkillCircle from "@/components/skills/SkillCircle";
 import { educationData } from "@/data/educationData";
-import { FaGraduationCap, FaCalendarAlt, FaBook } from "react-icons/fa";
-import { BsAward, BsSearch } from "react-icons/bs";
+import {
+  FaGraduationCap,
+  FaCalendarAlt,
+  FaBook,
+  FaChevronDown,
+  FaChevronRight,
+  FaFlask,
+  FaBriefcase,
+  FaLaptopCode,
+  FaPalette,
+  FaCode,
+  FaServer,
+  FaDatabase,
+  FaBrain,
+  FaShieldAlt,
+  FaChartLine,
+  FaSearch,
+} from "react-icons/fa";
+import {
+  BsAward,
+  BsSearch,
+  BsFileText,
+  BsQuote,
+  BsInfoCircle,
+} from "react-icons/bs";
 import { GiAchievement } from "react-icons/gi";
+import { MdRecommend, MdVerified } from "react-icons/md";
 
 const cardStyle = (isDarkMode) => `
-  p-6 rounded-lg
+  p-4 rounded-lg
   ${
     isDarkMode
       ? "bg-[#1a1f24] hover:bg-[#1f252c]"
@@ -24,7 +49,24 @@ const cardStyle = (isDarkMode) => `
 
 const TabDataContent = () => {
   const { isDarkMode } = useTheme();
-  
+  const [expandedNonCS, setExpandedNonCS] = useState({});
+  const [expandedTeaching, setExpandedTeaching] = useState({});
+
+  const toggleNonCS = (index) => {
+    setExpandedNonCS((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  const toggleTeaching = (eduIndex, expIndex) => {
+    const key = `${eduIndex}-${expIndex}`;
+    setExpandedTeaching((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
   const TAB_DATA = [
     {
       title: "Experience",
@@ -50,21 +92,21 @@ const TabDataContent = () => {
       content: (
         <div className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto px-4 sm:px-6">
           <div className="relative group w-full flex justify-center mb-8">
-          <Image
+            <Image
               src={
                 isDarkMode
                   ? "/images/UCLA_Samueli_CS_block_cmyk_rev.svg"
                   : "/images/UCLA_Samueli_CS_block_cmyk.svg"
               }
               alt="UCLA School of Engineering"
-            width={300}
-            height={300}
+              width={300}
+              height={300}
               className="rounded-lg w-full max-w-[250px] sm:max-w-[300px] transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl"
               priority
             />
           </div>
 
-          <div className="w-full space-y-4 sm:space-y-6" role="list">
+          <div className="w-full space-y-2" role="list">
             {educationData.map((edu, index) => (
               <div
                 key={index}
@@ -88,36 +130,32 @@ const TabDataContent = () => {
                   </h3>
                 </div>
 
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex items-center gap-2">
-                    <FaCalendarAlt
-                      className={`text-sm ${
-                        isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
-                      }`}
-                    />
-                    <span
-                      className={`text-sm ${
-                        isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
-                      }`}
-                      aria-label="Study period"
-                    >
-                      {edu.period}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <GiAchievement
-                      className={`text-base ${
-                        isDarkMode ? "text-[#58a6ff]" : "text-[#2075c7]"
-                      }`}
-                    />
-                    <span
-                      className={`text-sm font-medium
-                      ${isDarkMode ? "text-[#58a6ff]" : "text-[#2075c7]"}`}
-                      aria-label="Grade Point Average"
-                    >
-                      GPA: {edu.gpa}
-                    </span>
-                  </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <FaCalendarAlt
+                    className={`text-sm ${
+                      isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
+                    }`}
+                  />
+                  <span
+                    className={`text-sm ${
+                      isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
+                    }`}
+                    aria-label="Study period"
+                  >
+                    {edu.period}
+                  </span>
+                  <GiAchievement
+                    className={`text-base ${
+                      isDarkMode ? "text-[#58a6ff]" : "text-[#2075c7]"
+                    }`}
+                  />
+                  <span
+                    className={`text-sm font-medium
+                    ${isDarkMode ? "text-[#58a6ff]" : "text-[#2075c7]"}`}
+                    aria-label="Grade Point Average"
+                  >
+                    GPA: {edu.gpa}
+                  </span>
                 </div>
 
                 <div className="mt-4">
@@ -136,56 +174,214 @@ const TabDataContent = () => {
                     </h4>
                   </div>
                   <div
-                    className="grid grid-cols-1 gap-[0.5rem] pl-6"
+                    className="pl-6 space-y-1.5"
                     role="list"
                     aria-labelledby={`courses-${index}`}
                   >
-                    {edu.courses.map((course, idx) => (
-                      <div
-                        key={idx}
-                        className={`text-sm py-[0.4rem] px-2 rounded relative
-                          ${
-                            isDarkMode
-                              ? "bg-[#232930] text-gray-300"
-                              : "bg-[#e6e6e6] text-[#586e75]"
-                          }
-                          before:content-[''] before:absolute before:left-[-0.75rem] before:top-1/2 before:-translate-y-1/2
-                          before:w-1.5 before:h-1.5 before:rounded-full
-                          ${
-                            isDarkMode
-                              ? "before:bg-gray-500"
-                              : "before:bg-[#93a1a1]"
-                          }`}
-                        role="listitem"
-                      >
-                        {typeof course === "string" ? (
-                          course
-                        ) : (
-                          <div>
-                            <div className="flex justify-between items-center">
-                              <span>{course.name}</span>
-                              <span
-                                className={`text-xs font-medium ml-2 px-2 py-0.5 rounded flex items-center gap-1
+                    {Object.entries(edu.courses).map(
+                      ([category, courses], categoryIdx) => (
+                        <div key={categoryIdx} className="space-y-0.5">
+                          <h4
+                            className={`text-xs font-semibold uppercase tracking-wide mb-0.5 flex items-center gap-1 ${
+                              isDarkMode ? "text-gray-400" : "text-gray-600"
+                            }`}
+                          >
+                            {category ===
+                              "Core Programming & Software Engineering" && (
+                              <FaCode className="text-xs" />
+                            )}
+                            {category === "Systems & Architecture" && (
+                              <FaServer className="text-xs" />
+                            )}
+                            {category === "Data & Web Technologies" && (
+                              <FaDatabase className="text-xs" />
+                            )}
+                            {category === "Algorithms & Theory" && (
+                              <FaChartLine className="text-xs" />
+                            )}
+                            {category === "AI & Machine Learning" && (
+                              <FaBrain className="text-xs" />
+                            )}
+                            {category === "Networking & Security" && (
+                              <FaShieldAlt className="text-xs" />
+                            )}
+                            {category === "Graphics & Visualization" && (
+                              <FaPalette className="text-xs" />
+                            )}
+                            {category === "Research & Special Projects" && (
+                              <FaSearch className="text-xs" />
+                            )}
+                            {category === "Graphics & Research" && (
+                              <FaPalette className="text-xs" />
+                            )}
+                            {category === "Big Data & Analytics" && (
+                              <FaDatabase className="text-xs" />
+                            )}
+                            {category === "Computer Vision & AI" && (
+                              <FaBrain className="text-xs" />
+                            )}
+                            {category === "Machine Learning & AI" && (
+                              <FaBrain className="text-xs" />
+                            )}
+                            {category === "IoT & Emerging Technologies" && (
+                              <FaLaptopCode className="text-xs" />
+                            )}
+                            {category === "Research & Seminars" && (
+                              <FaSearch className="text-xs" />
+                            )}
+                            {category === "Software Engineering" && (
+                              <FaCode className="text-xs" />
+                            )}
+                            {category}
+                          </h4>
+                          <div className="grid grid-cols-1 gap-0">
+                            {courses.map((course, courseIdx) => (
+                              <div
+                                key={courseIdx}
+                                className={`text-xs py-0 px-2 rounded relative
                                 ${
                                   isDarkMode
-                                    ? "bg-[#58a6ff]/20 text-[#58a6ff]"
-                                    : "bg-[#2075c7]/20 text-[#2075c7]"
+                                    ? "bg-[#232930] text-gray-300"
+                                    : "bg-[#e6e6e6] text-[#586e75]"
+                                }
+                                before:content-[''] before:absolute before:left-[-0.5rem] before:top-1/2 before:-translate-y-1/2
+                                before:w-1 before:h-1 before:rounded-full
+                                ${
+                                  isDarkMode
+                                    ? "before:bg-gray-500"
+                                    : "before:bg-[#93a1a1]"
                                 }`}
-                                aria-label="Course achievement"
+                                role="listitem"
                               >
-                                <GiAchievement className="text-xs" />
-                                {course.achievement}
-                              </span>
-                            </div>
+                                {typeof course === "string" ? (
+                                  course
+                                ) : (
+                                  <div>
+                                    <div className="flex justify-between items-center">
+                                      <span>{course.name}</span>
+                                      <span
+                                        className={`text-xs font-medium ml-2 px-2 py-0.5 rounded
+                                      ${
+                                        isDarkMode
+                                          ? "bg-[#58a6ff]/20 text-[#58a6ff]"
+                                          : "bg-[#2075c7]/20 text-[#2075c7]"
+                                      }`}
+                                        aria-label="Course achievement"
+                                      >
+                                        {course.achievement}
+                                      </span>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
                           </div>
-                        )}
-                      </div>
-                    ))}
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
 
+                {edu.nonCSClasses && (
+                  <div className="mt-4">
+                    <button
+                      onClick={() => toggleNonCS(index)}
+                      className="flex items-center gap-2 mb-2 w-full text-left hover:opacity-80 transition-opacity"
+                      aria-expanded={expandedNonCS[index] || false}
+                      aria-controls={`non-cs-${index}`}
+                    >
+                      <FaBook
+                        className={`text-sm ${
+                          isDarkMode ? "text-gray-300" : "text-[#586e75]"
+                        }`}
+                      />
+                      <h4
+                        className={`text-sm font-semibold
+                        ${isDarkMode ? "text-gray-300" : "text-[#586e75]"}`}
+                      >
+                        Non CS Courses
+                      </h4>
+                      {expandedNonCS[index] ? (
+                        <FaChevronDown
+                          className={`text-xs ${
+                            isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
+                          }`}
+                        />
+                      ) : (
+                        <FaChevronRight
+                          className={`text-xs ${
+                            isDarkMode ? "text-gray-400" : "text-[#93a1a1]"
+                          }`}
+                        />
+                      )}
+                    </button>
+                    {expandedNonCS[index] && (
+                      <div
+                        id={`non-cs-${index}`}
+                        className="pl-6 mb-4 space-y-1.5"
+                        role="list"
+                        aria-labelledby={`non-cs-${index}`}
+                      >
+                        {Object.entries(edu.nonCSClasses).map(
+                          ([category, courses], categoryIdx) => (
+                            <div key={categoryIdx} className="space-y-0.5">
+                              <h4
+                                className={`text-xs font-semibold uppercase tracking-wide mb-0.5 flex items-center gap-1 ${
+                                  isDarkMode ? "text-gray-400" : "text-gray-600"
+                                }`}
+                              >
+                                {category === "Mathematics & Sciences" && (
+                                  <FaFlask className="text-xs" />
+                                )}
+                                {category === "Business & Management" && (
+                                  <FaBriefcase className="text-xs" />
+                                )}
+                                {category ===
+                                  "Humanities & Social Sciences" && (
+                                  <FaBook className="text-xs" />
+                                )}
+                                {category ===
+                                  "Digital Humanities & Technology" && (
+                                  <FaLaptopCode className="text-xs" />
+                                )}
+                                {category === "Arts & Culture" && (
+                                  <FaPalette className="text-xs" />
+                                )}
+                                {category}
+                              </h4>
+                              <div className="grid grid-cols-1 gap-0">
+                                {courses.map((course, courseIdx) => (
+                                  <div
+                                    key={courseIdx}
+                                    className={`text-xs py-0 px-2 rounded relative
+                                    ${
+                                      isDarkMode
+                                        ? "bg-[#232930] text-gray-300"
+                                        : "bg-[#e6e6e6] text-[#586e75]"
+                                    }
+                                    before:content-[''] before:absolute before:left-[-0.5rem] before:top-1/2 before:-translate-y-1/2
+                                    before:w-1 before:h-1 before:rounded-full
+                                    ${
+                                      isDarkMode
+                                        ? "before:bg-gray-500"
+                                        : "before:bg-[#93a1a1]"
+                                    }`}
+                                    role="listitem"
+                                  >
+                                    {course}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {edu.teachingExperience && (
-                  <div className="mt-6">
+                  <div className="mt-4">
                     <div className="flex items-center gap-2 mb-2">
                       <GiAchievement
                         className={`text-sm ${
@@ -201,55 +397,147 @@ const TabDataContent = () => {
                       </h4>
                     </div>
                     <div
-                      className="grid grid-cols-1 gap-[0.5rem] pl-6"
+                      className="grid grid-cols-1 gap-0.5 pl-6"
                       role="list"
                       aria-labelledby={`teaching-${index}`}
                     >
-                      {edu.teachingExperience.map((exp, idx) => (
-                        <div
-                          key={idx}
-                          className={`text-sm py-[0.4rem] px-2 rounded relative
-                            ${
-                              isDarkMode
-                                ? "bg-[#232930] text-gray-300"
-                                : "bg-[#e6e6e6] text-[#586e75]"
-                            }
-                            before:content-[''] before:absolute before:left-[-0.75rem] before:top-1/2 before:-translate-y-1/2
-                            before:w-1.5 before:h-1.5 before:rounded-full
-                            ${
-                              isDarkMode
-                                ? "before:bg-gray-500"
-                                : "before:bg-[#93a1a1]"
-                            }`}
-                          role="listitem"
-                        >
-                          <div className="flex justify-between items-center">
-                            <span>{exp.course}</span>
-                            <span
-                              className={`text-xs font-medium ml-2 px-2 py-0.5 rounded
-                              ${
-                                isDarkMode
-                                  ? "bg-[#58a6ff]/20 text-[#58a6ff]"
-                                  : "bg-[#2075c7]/20 text-[#2075c7]"
-                              }`}
+                      {edu.teachingExperience.map((exp, idx) => {
+                        const isExpanded = expandedTeaching[`${index}-${idx}`];
+                        return (
+                          <div key={idx}>
+                            <div
+                              className={`text-sm py-1 px-2 rounded relative mb-0.5 cursor-pointer hover:opacity-80 hover:bg-opacity-90 transition-all group
+                                ${
+                                  isDarkMode
+                                    ? "bg-[#232930] text-gray-300"
+                                    : "bg-[#e6e6e6] text-[#586e75]"
+                                }
+                                before:content-[''] before:absolute before:left-[-0.75rem] before:top-1/2 before:-translate-y-1/2
+                                before:w-1.5 before:h-1.5 before:rounded-full
+                                ${
+                                  isDarkMode
+                                    ? "before:bg-gray-500"
+                                    : "before:bg-[#93a1a1]"
+                                }`}
+                              role="listitem"
+                              onClick={() => toggleTeaching(index, idx)}
                             >
-                              {exp.role}
-                            </span>
+                              <div className="flex items-center justify-between">
+                                <div className="text-xs font-semibold flex items-center gap-1">
+                                  {exp.course}
+                                  {exp.details && (
+                                    <BsInfoCircle className="text-xs text-blue-500 opacity-60" />
+                                  )}
+                                  {exp.recommendation && (
+                                    <MdVerified
+                                      className="text-xs text-green-500"
+                                      title="有教授推荐信"
+                                    />
+                                  )}
+                                </div>
+                                {exp.details && (
+                                  <div
+                                    className="flex items-center gap-1"
+                                    title="点击查看详细信息"
+                                  >
+                                    {isExpanded ? (
+                                      <FaChevronDown className="text-xs text-blue-500 group-hover:scale-110 transition-transform" />
+                                    ) : (
+                                      <FaChevronRight className="text-xs text-blue-500 group-hover:scale-110 transition-transform" />
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-2 mb-0">
+                                <span
+                                  className={`text-xs ${
+                                    isDarkMode
+                                      ? "text-gray-400"
+                                      : "text-[#93a1a1]"
+                                  }`}
+                                >
+                                  {exp.period}
+                                </span>
+                                <span className="text-gray-400">•</span>
+                                <span
+                                  className={`text-xs font-medium px-2 py-0.5 rounded
+                                  ${
+                                    isDarkMode
+                                      ? "bg-[#58a6ff]/20 text-[#58a6ff]"
+                                      : "bg-[#2075c7]/20 text-[#2075c7]"
+                                  }`}
+                                >
+                                  {exp.role}
+                                </span>
+                              </div>
+                              <div
+                                className={`text-xs ${
+                                  isDarkMode
+                                    ? "text-gray-400"
+                                    : "text-[#93a1a1]"
+                                }`}
+                              >
+                                Supervised by {exp.professor}
+                              </div>
+                            </div>
+                            {exp.details && isExpanded && (
+                              <div className="ml-6 mt-1 mb-2">
+                                <ul className="text-xs space-y-1">
+                                  {exp.details.map((detail, detailIdx) => (
+                                    <li
+                                      key={detailIdx}
+                                      className={`flex items-start gap-2 ${
+                                        isDarkMode
+                                          ? "text-gray-400"
+                                          : "text-[#93a1a1]"
+                                      }`}
+                                    >
+                                      <span className="text-gray-500 mt-0.5 flex-shrink-0">
+                                        •
+                                      </span>
+                                      <span className="flex-1">{detail}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                                {exp.recommendation && (
+                                  <div className="mt-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                                    <div className="text-xs font-semibold mb-2 text-gray-600 dark:text-gray-300 flex items-center gap-1">
+                                      <MdRecommend className="text-sm text-blue-500" />
+                                      Professor Recommendation
+                                    </div>
+                                    <div className="text-xs text-gray-600 dark:text-gray-300 mb-2">
+                                      {exp.recommendation.text}
+                                    </div>
+                                    {exp.recommendation.summary && (
+                                      <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 italic">
+                                        {exp.recommendation.summary}
+                                      </div>
+                                    )}
+                                    <div className="mt-2">
+                                      <Image
+                                        src={exp.recommendation.image}
+                                        alt="Professor Recommendation"
+                                        width={400}
+                                        height={300}
+                                        className="rounded-lg border border-gray-200 dark:border-gray-600 max-w-full h-auto"
+                                        onError={(e) => {
+                                          e.target.style.display = "none";
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
-                          <div
-                            className={`text-xs mt-1
-                            ${isDarkMode ? "text-gray-400" : "text-[#93a1a1]"}`}
-                          >
-                            {exp.period}
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
 
                 {edu.researchExperience && (
-                  <div className="mt-6">
+                  <div className="mt-4">
                     <div className="flex items-center gap-2 mb-2">
                       <BsSearch
                         className={`text-sm ${
@@ -343,15 +631,15 @@ const TabDataContent = () => {
                                 </span>
                               </div>
                             </div>
-              </div>
-              </div>
+                          </div>
+                        </div>
                       ))}
-              </div>
-              </div>
+                    </div>
+                  </div>
                 )}
               </div>
             ))}
-              </div>
+          </div>
         </div>
       ),
     },
