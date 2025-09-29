@@ -500,26 +500,63 @@ const TabDataContent = () => {
                                   ))}
                                 </ul>
                                 {exp.recommendation && (
-                                  <div className="mt-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                                    <div className="text-xs font-semibold mb-2 text-gray-600 dark:text-gray-300 flex items-center gap-1">
-                                      <MdRecommend className="text-sm text-blue-500" />
+                                  <div
+                                    className={`mt-3 p-4 rounded-lg border shadow-md transition-all duration-300 hover:shadow-lg
+                                     ${
+                                       isDarkMode
+                                         ? "bg-[#0d1117] border-[#30363d] hover:bg-[#161b22]"
+                                         : "bg-white border-[#d0d7de] hover:bg-[#f6f8fa]"
+                                     }`}
+                                  >
+                                    <div
+                                      className={`text-sm font-semibold mb-3 flex items-center gap-2
+                                      ${
+                                        isDarkMode
+                                          ? "text-[#58a6ff]"
+                                          : "text-[#0969da]"
+                                      }
+                                    `}
+                                    >
+                                      <MdRecommend className="text-lg" />
                                       Professor Recommendation
                                     </div>
-                                    <div className="text-xs text-gray-600 dark:text-gray-300 mb-2">
+                                    <div
+                                      className={`text-sm leading-relaxed mb-3
+                                      ${
+                                        isDarkMode
+                                          ? "text-[#e6edf3]"
+                                          : "text-[#24292f]"
+                                      }
+                                    `}
+                                    >
                                       {exp.recommendation.text}
                                     </div>
                                     {exp.recommendation.summary && (
-                                      <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 italic">
+                                      <div
+                                        className={`text-sm italic mb-3 p-2 rounded border-l-4
+                                         ${
+                                           isDarkMode
+                                             ? "text-[#8b949e] bg-[#21262d] border-[#58a6ff]"
+                                             : "text-[#57606a] bg-[#f1f3f4] border-[#0969da]"
+                                         }
+                                       `}
+                                      >
                                         {exp.recommendation.summary}
                                       </div>
                                     )}
-                                    <div className="mt-2">
+                                    <div className="mt-3">
                                       <Image
                                         src={exp.recommendation.image}
                                         alt="Professor Recommendation"
                                         width={400}
                                         height={300}
-                                        className="rounded-lg border border-gray-200 dark:border-gray-600 max-w-full h-auto"
+                                        className={`rounded-lg border-2 max-w-full h-auto shadow-sm
+                                          ${
+                                            isDarkMode
+                                              ? "border-[#30363d] hover:border-[#58a6ff]"
+                                              : "border-[#d0d7de] hover:border-[#0969da]"
+                                          }
+                                        `}
                                         onError={(e) => {
                                           e.target.style.display = "none";
                                         }}
