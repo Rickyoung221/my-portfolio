@@ -58,8 +58,9 @@ export const educationData = [
       "Systems & Architecture": [
         "CS 111 - Operating Systems Principles ",
         "CS 134 - Distributed Systems ",
-        "CS 33 – Introduction to Computer Organization",
+        "CS 33 –  Computer Organization",
         "CS M151B/EE M116C - Computer Systems Architecture",
+        "CS 51A - Logic Design of Digital Systems",
         "CS M152A - Introductory Digital Design Laboratory",
       ],
       "Data & Web Technologies": [
@@ -69,15 +70,16 @@ export const educationData = [
       "Algorithms & Theory": [
         "CS 180 - Algorithms and Complexity ",
         "CS 181 - Formal Languages and Automata",
+        "CS CM122 – Algorithms in Bioinformatic",
       ],
       "AI & Machine Learning": [
         "CS 161 - Fundamentals of Artificial Intelligence ",
         "CS 146 - Introduction to Machine Learning ",
-        "CS 148 - Introduction to Data Science - Data Mining",
+        "CS 148 - Data Science: Data Mining",
       ],
       "Networking & Security": [
         "CS 118 - Computer Network Fundamentals ",
-        "CS 188 - Software Security ",
+        "CS 188 - Secure Software Design & Development",
       ],
       "Graphics & Research": [
         "CS 174A - Computer Graphics",
